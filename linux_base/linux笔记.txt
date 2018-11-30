@@ -1,0 +1,386 @@
+
+		python——linux基础笔记
+1.linux背景
+2.linux一切皆文件
+linux一切没有消息的消息就是最好的消息
+3.基本命令学习
+	命令组成:cmd [options] [args]
+	手册查看:
+		man 打开手册，具体使用man man
+	命令展示:
+		<1>pwd 显示当前工作路径
+		<2>cd 切换工作路径
+			linux文件系统结构是从/开始
+			路径如果从/开始算----》绝对路径
+			从当前路径开始算-----》相对路径(.当前 ..上一级)	
+		<3>ls
+			options:
+				-a
+				-l
+				-i
+				-d
+				-h
+		<4>查看文件内容
+			cat filepath 显示文件全部内容
+			less filepath 按屏显示
+				/key 搜索
+				q 退出
+			
+			head -行数 filepath 显示文件前几行
+			tail -行数 filepath 显示文件的后几行
+		<5>复制
+			cp [-r(目录)] srcpath destpath
+		<6>剪切
+			mv srcpath destpath
+		<7>删除
+			rm [-r(目录) -f(强制)] filepath			
+		<8>创建文件
+			touch filename 空文件
+		<9>创建目录
+			mkdir dirname 空目录
+		<10>关机
+			shutdown -h now
+			poweroff
+			init 0
+			halt
+			重启
+			shutdown -r now
+			reboot
+			init 6
+		<11>
+			history---->查看历史命令	
+	
+4.文件管理
+	文件属性(元信息)
+		<1>stat filepath
+		<2>ls -l（部分）
+			drwxr-xr-x. 2 root root    6 11月 26 12:15 音乐
+		文件类型d
+			不以后缀区分类型
+			七种文件类型
+				-	regular		普通文件
+				d	directory	目录文件
+				c	charactor	字符设备文件
+				b	block		块设备文件
+				l	link		符号链接文件
+				p	pipe		管道文件
+				s	socket		套接字文件
+
+		文件权限rwxr-xr-x
+			拥有者 所属组	其他用户
+			u		g 		o			a(all)
+			修改文件权限:
+				<1>chmod u/g/o/a (+ -)r/w/x filepath
+				<2>chmod 0666 filepath
+
+			修改文件的拥有者和所属组
+				chown user:group filepath
+
+			目录文件:
+				r	ls
+				w	touch / mkdir / rm
+				x	cd
+			防止产生权限过大的文件:
+				umask
+				mode & ~umask === 文件真正的权限
+
+			特殊权限
+				u+s---》所有有此权限的执行文件，可以使普通用户在执行此命令期间，将身份切换为文件拥有者
+
+		文件的硬链接个数 2
+			硬链接:同一个文件，多一个名字			
+				inode是同一个分区文件的唯一标识
+				所以硬链接文件不能跨分区	
+				ln srcpath dest
+				cp -l srcpath dest
+
+			符号链接(软链接):
+				就是一个快捷方式，存储是源文件的路径
+				可以跨分区
+				ln -s srcpath dest
+				cp -s srcpath dest
+			
+
+		文件拥有者和所属组
+			创建用户useradd username
+			给定密码passwd username
+			切换用户su - username
+			删除用户userdel -r username
+			登出用户exit
+
+			用户信息:
+				/etc/passwd
+			组信息:
+				/etc/group
+			密码:
+				/etc/shadow
+			
+			组创建groupadd groupname
+			组删除groupdel groupname
+			用户添加到组内:
+				gpasswd -a user group
+			用户从组中删除:
+				gpasswd -d user group
+
+		文件大小
+			文件的大小(size) != 所占磁盘空间的大小(block)
+			stat filepath
+				block == 512bytes
+			du -sh filepath 查看filepath对应的文件所占用磁盘空间的大小
+			df -h 查看磁盘分区占用情况
+
+		文件时间
+			access time	
+			modify time		ls -l 内容改变
+			change time		属性改变
+
+
+
+	文件的查找
+		可执行文件:
+			which cmd	
+			whereis cmd
+
+		非可执行:
+			遍历数据库 locate filepath
+			更新数据库 updatedb
+
+			find(遍历磁盘空间)
+				find path options 
+				options:
+					-name 按名字找
+					find /etc/ -name "passwd"
+					-size 按文件大小查找
+					find /etc/ -size n(b/c/k)
+					-mtime 修改时间
+					find /etc/ -mtime n(天)
+					-type 类型
+					find /etc/ -type f/d/c/b/p/l/s
+					
+					-exec 对于查找到的结果执行
+						find /etc/ -name "hello" -exec ls -l {} \;
+						只对找到的文件执行ls -l结果，不打印路径
+					-ok
+						find /etc/ -name "hello" -ok ls -l {} \;
+						在执行ls -l之前会询问
+					-print 打印查找的结果
+						find /etc/ -name "hello" -print  -exec ls -l {} \;
+						对找到的文件执行ls -l结果，打印路径
+					-a 连接多个查找选项的
+						find /etc/ -type d -a -size +10k	
+
+	文件的打包压缩
+		压缩:
+			.gz .bz2 .zip
+			gzip file 压缩为.gz
+			gunzip file.gz 解压缩
+			bzip2 file 
+			bunzip2 file.bz2
+
+			zip xxx.zip file dir1 dir2
+			unzip xxxzip
+		主要tar options xx.tar.xx file1.... dir.....
+			options:
+				-c 创建
+				-v 过程可视
+				-f 在最后，后跟包名
+				-j 生成bz2压缩格式
+				-z 生成gz格式压缩文件
+				-J 生成xz格式
+				-x 解压缩
+				-C 指定解压路径
+				-t 不解压不解包的情况下查看压缩包中内容
+				-r 向包中追加新文件
+
+	文件重定向
+		当用户登陆成功后，三个文件依次打开：
+			标准输入(stdin 0) 标准输出(stdout 1) 标准错误输出(stderr 2)			
+		0< 标准输入重定向
+		1> 标准输出重定向
+		2> 标准错误输出重定向
+		>> 追加
+
+		| 管道
+
+		wc [-lwc] filepath
+		-l line 统计filepath文件的行数
+		-w word	单词个数
+		-c charactor 字符个数
+
+		grep [-iwn] key filepath ---->筛选文件内容
+		
+	vim编辑器的使用:
+		vim filepath---->打开--->一般模式
+		--->进入编辑模式进行编辑(iIaAoOsS)
+		--->从编辑模式进入一般模式(Esc / Ctrl+c)
+		--->从一般模式进入命令行模式(:w保存 :q退出)
+		一般模式下:
+			2yy 复制2行
+			p	粘贴
+			2dd	剪切2行
+			u	撤销
+			Ctrl+r	还原
+			x/X 删除光标字符
+			r	替换
+			R	一直替换到Esc为止
+			块选择:
+				ctrl+v 方向键选择	
+				I / A 插入相应内容--->Esc Esc
+			gg 首行
+			G  末行
+			5G 第5行
+
+		命令行模式下:
+			:
+			w 保存
+			q 退出
+			q! 强制退出
+			w filepath 另存为
+			saveas filepath 另存为
+			%s/oldstring/newstring/g 将所有的oldstring替换为newstring
+			2,5s/oldstring/newstring/g 将第2行到第5行oldstring替换为newstring
+			set nu 显示行号
+			set ts=4 将Tab设置为4个字符宽度	
+
+5.软件包管理
+	源码包
+		.tar.gz .tar.bz2 .tar.xz
+		<1>下载并解压解包
+		<2>编译make
+		<3>make install
+
+	二进制包(.rpm)
+		yum 安装:
+			/etc/yum.repo.d/xxx.repo
+			yum install xxxx
+			例如有如下软件包:
+				coreutils-8.22-21.el7.x86_64.rpm
+				coreutils包名
+			yum install coreutils 安装 
+			yum remove coreutils 卸载 
+			yum repolist 查看仓库中有多少软件包
+			yum list 列出所有的软件包
+			yum provides /usr/bin/ls 查看文件对应的软件包
+			yum update coreutils 更新
+			yum clean all 清除缓存
+			
+			yum源所在路径
+				/etc/yum.repos.d/xxx.repo
+
+		本地yum源配置:
+			1.将镜像文件挂载到文件系统
+			2.创建镜像的挂载点 mkdir /mnt/centos7
+			3.光盘镜像在/dev/cdrom目录
+			4.挂载光盘镜像
+				mount -t iso9660 -o loop /dev/cdrom /mnt/centos7
+			5.配置镜像的yum源
+				vim /etc/yum.repos.d/my.repo		
+					
+				[local_centos7]
+				name=centos7
+				baseurl=file:///mnt/centos7
+				enabled=1
+				gpgcheck=0
+
+		已下载的rpm软件包,安装:
+			xxxx.rpm
+				
+			rpm -ivh xxxx 安装已下载的rpm包
+			rpm -e xxxx 卸载
+			rpm -U xxxx 更新
+			rpm -qa 查询系统中所有已安装的rpm包
+			rpm -qf /usr/bin/ls 查询ls对应的软件包
+
+6.网络管理
+	<1>查看ip, mac, netmask....
+		ip addr
+		ifconfig		
+	<2>查看/启动/重启/关闭/自启动/禁用服务
+		systemctl status/start/restart/stop/enable/disable 服务名字
+	<3>手动配置静态ip地址
+		关闭NetworkManager
+			systemctl stop NetworkManager
+		配置/etc/sysconfig/network-scripts/ifcfg-xxx
+			DEVICE=eth0
+			BOOTPROTO=none
+			NM_CONTROLLED=no
+			ONBOOT=yes
+			TYPE=Ethernet
+			IPADDR=172.16.60.1
+			PREFIX=24
+			GATEWAY=172.16.60.254	
+		重启网络服务
+		systemctl restart network
+
+	<4>防火墙
+		关闭防火墙	
+			systemctl stop firewalld
+			systemctl disable firewalld
+
+	<5>vsftpd服务 ---> 文件共享
+		安装:yum install vsftpd 
+		启动:systemctl start vsftpd
+		开机自启动:systemctl enable vsftpd
+		配置文件:/etc/vsftpd/vsftpd.conf
+		
+		访问共享目录:
+		下载安装:yum install lftp
+		lftp 192.168.5.129
+		lcd --->切换下载路径
+		get filepath 下载非目录文件
+		mirror filepath 下载目录文件
+		bye 退出
+	<6>nfs远程挂载
+		下载安装:
+			yum install nfs-utils rpcbind
+		启动:
+			systemctl start nfs
+			systemctl enable nfs
+			systemctl start rpcbind
+			systemctl enable rpcbind
+		编辑共享路径:
+			vim /etc/exports
+			/var/ftp/pub *(ro,sync,no_root_squash)
+			
+		客户端挂载:
+			mount 192.168.5.129:/var/ftp/pub /mnt
+
+
+7.进程管理
+	查看进程信息
+		ps aux	
+	终止进程通过kill 发送信号
+		kill -l查看所有的信号
+		kill -9 3333	发送9号信号给进程号为3333的进程
+	top 实时查看系统中进程的运行状态	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+			
+
+
+
+
+
