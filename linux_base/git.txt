@@ -1,0 +1,30 @@
+
+git的基本使用
+
+1.创建仓库
+	登陆github帐号,创建远程仓库
+	同步到本地
+	生成key:
+		ssh-keygen
+		cat ~/.ssh/id_rsa.pub 将密钥复制到帐号的key
+	git clone git@github.com:zhangzongyan/python20181119.git
+	python20181119---》本地仓库
+	
+
+	基本使用命令
+		git add .---->追踪
+		git commit -m "备注" ---->提交到仓库
+		git push ---->提交到远程仓库
+		git pull ---->下载到本地仓库
+		git status ---->查看仓库状态
+		git log ----->查看仓库日志(id)
+		git reset --hard id ----->切换到指定版本
+		git reflog ----->查看最新版本日志
+		git rm ----->删除
+
+
+
+
+
+
+
