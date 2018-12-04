@@ -1,0 +1,60 @@
+
+20181204内容回顾
+1.Python历史背景
+	Guido van rossum "龟叔, 1989年
+	"简单，明确，优雅"
+	解释型语言
+	高级语言
+
+2.Python的基本数据类型
+	布尔类型
+		True False
+	数字类型
+		int float
+		运算符:
+			单目运算符
+				~ + -(正负)
+			算术运算符
+				** / * // % + -
+			位运算符
+				& | ^ >> << 
+			关系运算符
+				> >= < <= == !=
+			赋值运算符
+				= += -= /= *= //= %= **=
+			身份运算符
+				is  is not
+			成员运算符
+				in not in
+			逻辑运算符
+				not and or
+		函数:
+			int()
+			pow()
+			divmod()
+			abs()
+	字符串
+		str
+		定义:
+			'' "" '''''' """"""
+		运算符:
+			+ / *n / in / not in 
+		有序的----》索引(0) "abc"
+			s[index] 0<= index < len(s)  -len(s)<= index <= -1
+		切片:
+			s[start:end:step]
+				start<= index < end----> index += step
+		函数:
+			len()
+			max() / min() / .index() / .count()
+			.format()
+	序列类型
+	集合
+	映射类型
+
+3.读入和输出
+	input()
+	print()
+	
+
+
