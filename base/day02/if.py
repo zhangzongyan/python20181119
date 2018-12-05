@@ -60,7 +60,7 @@ else:
 	print('E')
 '''
 if score > 100 or score < 0:
-	print('无效成绩')
+	pass
 else:
 	score //= 10
 	if score == 9 or score == 10:
