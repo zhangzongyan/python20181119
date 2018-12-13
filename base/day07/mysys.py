@@ -32,8 +32,16 @@ def caculate(num1, num2, op):
 
 # print(sys.argv)
 if __name__ == '__main__':
+	'''
 	argv = sys.argv
 	if len(argv) >= 4:
 		res = caculate(int(argv[1]), int(argv[3]), argv[2])
 		print('{} {} {} = {}'.format(argv[1], argv[2], argv[3], res))
+	'''
+	sys.exit(0) # 终止
+
+	print(sys.builtin_module_names)
+
+
+
 
