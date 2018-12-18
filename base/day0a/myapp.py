@@ -79,5 +79,22 @@ rbtn2['command'] = click_rbtn
 rbtn2['text'] = 'Female'
 rbtn2.pack()
 
+# 复选按钮
+def get_status():
+    print(s1.get(), s2.get())
+
+s1 = StringVar()
+check1 = Checkbutton(frm, text='吃饺子', variable=s1, onvalue='choose_dumpling', offvalue='no_dumpling')
+check1.pack()
+s2 = IntVar()
+check2 = Checkbutton(frm, text='吃包子', variable=s2, onvalue=1, offvalue=0)
+check2.pack()
+check3 = Checkbutton(frm, text='吃面条子')
+check3.pack()
+
+commit = Button(frm, text='提交')
+commit['command'] = get_status
+commit.pack()
+
 
 root.mainloop()
