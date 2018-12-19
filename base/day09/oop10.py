@@ -13,10 +13,11 @@ class Test(object):
 def f(self, name='python'):
 	print('hello %s'% name)
 
-Test = type('Test', (object,), dict(show=f))
+Test = type('Test', (object,), dict(show=f, name='python'))
 
 t = Test()
 t.show()
+print(t.name)
 
 # 另一种构建类的方法，是先构建元类，以元类为模板构建类
 class ListMetaclass(type):
@@ -33,8 +34,6 @@ print(type(l))
 l.add(1)
 l.add('hello')
 print(l)
-
-
 
 
 
